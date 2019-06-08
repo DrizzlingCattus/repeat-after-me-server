@@ -21,12 +21,6 @@ self.attach = (prefix, server) => {
     server.use(prefix, router);
 };
 
-//router.get('/quizs', (req, res) => {
-//    self.collection.find().then((result) => {
-//        res.send(result);
-//    });
-//});
-
 /* Get all quiz document */
 self.get('/quizs').then(({req, res}) => {
     self.collection.find().then((result) => {
@@ -55,5 +49,22 @@ self.get('/quizs/date/:date').then(({req, res}) => {
 }).catch((err) => {
     console.log(self.prefix + '/quizs/date/:date throw error => ' + err);
 });
+
+/* Get quizs from DB with date ~ date */
+self.get('/quizs/date/:start/:end').then(({req, res}) => {
+    const dateStart = req.params.start;
+    const dateEnd = req.params.end;
+    self.collection.find({
+        'date': {
+            $gte: dateStart,
+            $lte: dateEnd
+        }
+    }).then((result) => {
+        res.send(result);
+    });
+}).catch((err) => {
+    console.log(self.prefix + '/quizs/date/:date throw error => ' + err);
+});
+
 
 module.exports = routerPacking;
