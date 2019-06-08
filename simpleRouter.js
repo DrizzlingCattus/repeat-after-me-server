@@ -36,8 +36,7 @@ self.get('/quizs').then(({req, res}) => {
     console.log(self.prefix + '/quizs throw error => '+ err);
 });
 
-
-/* Get quiz from DB id */
+/* Get quiz from DB from id */
 self.get('/quizs/:id').then(({req, res}) => {
     const quizId = req.params.id;
     self.collection.findOne({'_id': quizId}).then((result) => {
@@ -47,5 +46,14 @@ self.get('/quizs/:id').then(({req, res}) => {
     console.log(self.prefix + '/quizs/:id throw error => ' + err);
 });
 
+/* Get quizs from DB with date */
+self.get('/quizs/date/:date').then(({req, res}) => {
+    const quizDate = req.params.date;
+    self.collection.find({'date': quizDate}).then((result) => {
+        res.send(result);
+    });
+}).catch((err) => {
+    console.log(self.prefix + '/quizs/:date throw error => ' + err);
+});
 
 module.exports = routerPacking;
