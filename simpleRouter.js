@@ -39,7 +39,10 @@ self.get('/quizs').then(({req, res}) => {
 
 /* Get quiz from DB id */
 self.get('/quizs/:id').then(({req, res}) => {
-    // TODO
+    const quizId = req.params.id;
+    self.collection.findOne({'_id': quizId}).then((result) => {
+        res.send(result);
+    });
 }).catch((err) => {
     console.log(self.prefix + '/quizs/:id throw error => ' + err);
 });
