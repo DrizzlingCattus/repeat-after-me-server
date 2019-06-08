@@ -53,7 +53,7 @@ self.get('/quizs/date/:date').then(({req, res}) => {
         res.send(result);
     });
 }).catch((err) => {
-    console.log(self.prefix + '/quizs/:date throw error => ' + err);
+    console.log(self.prefix + '/quizs/date/:date throw error => ' + err);
 });
 
 module.exports = routerPacking;
