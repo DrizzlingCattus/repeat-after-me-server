@@ -91,7 +91,28 @@ self.post('/quizs').then(({req, res}) => {
 
 /* Put quiz to DB, update quiz data */
 self.put('/quizs/:id').then(({req, res}) => {
-    //TODO
+    const quizId = req.params.id;
+    const putResult = {};
+    console.log("put is calling!");
+    self.collection.findOne({"_id": quizId}).then((tquiz) => {
+        for(let prop in req.body) {
+            // if tquiz[prop] undefined, prop is wrong,
+            // it is not in document key.
+            // if req.body[prop] undeinfed, it is wrong value,
+            // because tquiz[prop]'s empty value is null
+            if(tquiz[prop] !== undefined &&
+            req.body[prop] !== undefined) {
+                tquiz[prop] = req.body[prop];
+            }
+        }
+        tquiz.save().then(() => {
+            putResult.status = 'success';
+            res.send(JSON.stringify(putResult));
+        });
+    }).catch((err) => {
+        putResult.status = 'fail';
+        res.send(JSON.stringify(putResult));
+    });
 }).catch((err) => {
     console.log('PUT://' + self.prefix + '/quizs/:id throw error => ' + err);
 });
