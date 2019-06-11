@@ -2,8 +2,9 @@
   "name": "repeat-after-me-server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js", 
   "scripts": {
+    "start": "sh start.sh",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "DrizzlingCattus",

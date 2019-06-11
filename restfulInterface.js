@@ -3,47 +3,35 @@ const makeRestful = (server) => {
 
     return {
         get: (path) => {
-            return new Promise(function(resolve, reject) {
-                server.get(path, function(req, res) {
-                    resolve({
-                        req: req,
-                        res: res
-                    });
-                });
-            });
+            return {
+                then: (cb) => {
+                    server.get(path, cb);
+                }
+            };
         },
 
         put: (path) => {
-            return new Promise(function(resolve, reject) {
-                server.put(path, function(req, res) {
-                    resolve({
-                        req: req,
-                        res: res
-                    });
-                });
-            });
+            return {
+                then: (cb) => {
+                    server.put(path, cb);
+                }
+            };
         },
 
         post: (path) => {
-            return new Promise(function(resolve, reject) {
-                server.post(path, function(req, res) {
-                    resolve({
-                        req: req,
-                        res: res
-                    });
-                });
-            });
+            return {
+                then: (cb) => {
+                    server.post(path, cb);
+                }
+            };
         },
 
         delete: (path) => {
-            return new Promise(function(resolve, reject) {
-                server.delete(path, function(req, res) {
-                    resolve({
-                        req: req,
-                        res: res
-                    });
-                });
-            });
+            return {
+                then: (cb) => {
+                    server.delete(path, cb);
+                }
+            };
         }
     }; //return
 };

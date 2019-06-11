@@ -2,3 +2,4 @@ start.sh
 spec/*
 node_modules/*
 disposable/*
+*.log
