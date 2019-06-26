@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const { CONFIG } = require('./config.js');
 
 const SCHEMA_TYPE = {
-    SIMPLE: 'simple'
+    SIMPLE: 'simple',
+    LOGIN: 'login'
 };
 
 const connect_url = `mongodb://${CONFIG.DB_SERVER_IP}:${CONFIG.DB_PORT}/${CONFIG.DB_NAME}`;
@@ -30,9 +31,20 @@ const makeSimpleSchema = (name) => {
     });
 };
 
+const makeLoginSchema = (name) => {
+    return new mongoose.Schema({
+        user_id: String,
+        user_password: String
+    }, {
+        collection: name
+    });
+};
+
 const getSchema = (type, name) => {
     if (SCHEMA_TYPE.SIMPLE === type) {
         return makeSimpleSchema(name);
+    } else if (SCHEMA_TYPE.LOGIN === type) {
+        return makeLoginSchema(name);
     }
     return null;
 }
