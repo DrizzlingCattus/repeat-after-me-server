@@ -1,63 +1,58 @@
-"use strict";
+const util = require('./util.js');
 
-const COMMAND_LINE_OPTION = {/* enroll what you want by using enrollOption */};
+const COMMAND_LINE_OPTION = {};
 const INVAILD_OPTION_VALUE_INSERTED_MESSAGE = (option, value) => {
-	return `There is unexpected command line option form.\n option :: ${option}\nvalue :: ${value}`;
+    return `There is unexpected command line option form.\n option :: ${option}\nvalue :: ${value}`;
 };
 
-
-const util = {};
-
-util.isString = (input) => {
-	return input instanceof String || typeof input === "string";
-};
-
-
-const commandLineOptionArray = Object.values(COMMAND_LINE_OPTION);
-
+const optionNameList = []; 
 const isCommandLineOption = (couldBeOption) => {
-	if(commandLineOptionArray.indexOf(couldBeOption) != -1) {
-		return true;
-	}
-	return false;
+    if(optionNameList.indexOf(couldBeOption) != -1) {
+        return true;
+    }
+    return false;
 };
 
 /**
  * add new option for parsing it.
  * [key] : [value]
- * upperCase("option_accessor") : --"option_name" or 
- * upperCase("option_name") : --"option_name"
+ * upperCase("optionAccessor") : --"optionName" or 
+ * upperCase("optionName") : --"optionName"
  *
- * @param {String} option_name
- * @param {String} option_accessor. optional.
+ * @param {String} optionName like --option-name
+ * @param {String} optionAccessor like OPTION_ACCESSOR. 
+ * optional.
  * @returns {bool} true if success and false or not
  */
-const enrollOption = (option_name, option_accessor = null) => {
-    const isValidOptionName = util.isString(option_name); 
-    const isOptionAccessorString = util.isString(option_accessor);
-    const isValidOptionAccessor = option_accessor === null ||
+const enrollOption = (optionName, optionAccessor = null) => {
+    const isValidOptionName = util.isString(optionName); 
+    const isOptionAccessorString = util.isString(optionAccessor);
+    const isValidOptionAccessor = optionAccessor === null ||
         isOptionAccessorString;
-        
+
     if(!(isValidOptionName && isValidOptionAccessor))
     {
         return false;
     }
-    
-    // make key form like, string = --string
+
+    // make key form like KEY_NAME
     let key;
     if(isOptionAccessorString) {
-        key = option_accessor.toUpperCase();
-    } else if(option_name.slice(0,2) == "--") {
-        key = option_name.toUpperCase();
+        key = optionAccessor.toUpperCase().replace(/-/g, '_');
     } else {
-        key = "--" + option_name.toUpperCase();
+        // '--' + 'something-left' => use something-left
+        key = util.cutFrom(optionName, (v) => v != '-');
+        if(key.length === 0) {
+            throw Error('optionName is not vaild for accessor. you must include just one more alpha letter');
+        }
+        key = key.toUpperCase().replace(/-/g, '_');
     }
-    COMMAND_LINE_OPTION[key] = option_name;
+    COMMAND_LINE_OPTION[key] = optionName;
+    optionNameList.push(optionName);
     return true;
-}
+};
 
-
-const parseOption = (inputArgv) => {
+const parseNodeArgv = (inputArgv) => {
     const insertedCLOption = {};
     const argv = inputArgv.copyWithin();
 
@@ -77,4 +72,4 @@ const parseOption = (inputArgv) => {
 };
 
 
-module.exports = { COMMAND_LINE_OPTION, parseOption, enrollOption };
+module.exports = { COMMAND_LINE_OPTION, parseNodeArgv, enrollOption };
