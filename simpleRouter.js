@@ -18,6 +18,8 @@ self.init = (collectionName) => {
 
 self.attach = (prefix, server) => {
     self.prefix = prefix;
+    // express specific api
+    // router is express object, usr is express app.use
     server.use(prefix, router);
 };
 
@@ -54,7 +56,10 @@ self.get('/quizs/date/:start/:end').then((req, res) => {
             $lte: dateEnd
         }
     }).then((result) => {
-        res.send(result);
+        res.status(200).send(result);
+    }).catch((err) => {
+        //TODO : specify error
+        res.status(520).end();
     });
 });
 
